@@ -1,0 +1,51 @@
+﻿/* .launching{
+	text-align: center;
+} */
+.mainLogo {
+    border-radius: 75px;
+    height: 75px;
+}
+
+#login-alert, #login-success, #register-alert, #email-alert {
+    display: none;
+}
+
+.flex-container {
+    display: flex;
+}
+
+.errorClass {
+    border: 1px solid #dc3545;
+}
+
+.flex-container > div {
+    background-color: #f1f1f1;
+    margin: 10px;
+    padding: 20px;
+    font-size: 30px;
+}
+
+/* .footerClass{
+	position: fixed;
+	bottom: 0;
+} */
+
+.logoDiv {
+    text-align: center;
+}
+
+.navbar.navbar-default {
+    margin-top: 13px;
+}
+/* .launching button{
+  float: right;
+} */
+
+@media (min-width: 768px) {
+    .navbar-nav {
+        float: none;
+        margin: 0 auto;
+        display: table;
+        table-layout: fixed;
+    }
+}
