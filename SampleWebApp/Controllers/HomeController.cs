@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -18,8 +19,21 @@ namespace SampleWebApp.Controllers
         }
 
         [HttpPost]
-        public void UploadFiles(IFormFile file) { 
-            
+        public async Task<JsonResult> UploadFiles(IFormFile file) {
+            bool result = false;
+            string msg = string.Empty;
+            if (file == null) {
+                throw new NullReferenceException("File not uploaded properly");
+            }
+            var filePath = Path.Combine("D:\\Upload", file.FileName);
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await file.CopyToAsync(stream);
+                result = true;
+                msg = "File Uploaded Successfully";
+            }
+            return Json(new { Status = result, Msg = msg });
         }
      
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
