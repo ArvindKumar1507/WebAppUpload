@@ -4,12 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - SampleWebApp</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="~/css/index.css"/>
+    <link rel="stylesheet" href="~/css/index.css" />
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <header>
         <div class="container">
             <div class="row">
                 <div class="col-md-10">
@@ -24,7 +23,7 @@
                             </button>
                         </div>
                         <div class="collapse navbar-collapse navbar-ex1-collapse">
-                            <ul class="nav navbar-nav">
+                            <ul class="nav navbar-nav" style="margin-left:25%">
                                 <li class="active"><a action="Home/Index">Home</a></li>
                                 <li><a href="service.html">Service</a></li>
                                 <li><a href="about.html">About</a></li>
@@ -39,20 +38,17 @@
                 </div>
             </div>
         </div>
-    </header>
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted container-fluid">
         <div class="row footerClass">
-            <marquee direction="left">
-                <div class="flex-container">  
-                    Copy right @DateTime.Now.Year
-                </div>
-            </marquee>
+            <div style="text-align:center;width:100%">  
+                <span>Copyrights &copy; @DateTime.Now.Year</span>
+            </div>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
