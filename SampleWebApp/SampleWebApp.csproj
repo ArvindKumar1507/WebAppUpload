@@ -8,6 +8,10 @@
     <None Include="wwwroot\scripts\index.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
+  </ItemGroup>
+
 
 
 </Project>
