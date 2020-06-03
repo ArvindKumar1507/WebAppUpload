@@ -7,15 +7,18 @@ using Microsoft.AspNetCore.Mvc;
 using SampleWebApp.DataAccess;
 using SampleWebApp.Models;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace SampleWebApp.Controllers
 {
     public class HomeController : Controller
     {
         private readonly WebAppUploadContext _context;
-        public HomeController(WebAppUploadContext context)
+        private readonly string filePath;
+        public HomeController(WebAppUploadContext context, IConfiguration configuration)
         {
             _context = context;
+            filePath = configuration["FilePath"];
         }
 
         public ActionResult Index()
@@ -24,7 +27,7 @@ namespace SampleWebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> UploadFiles([FromForm] IFormCollection formData)
+        public JsonResult UploadFiles([FromForm] IFormCollection formData)
         {
             IFormFile file = HttpContext.Request.Form.Files?[0];
             string fileId = formData["passwd"];
@@ -35,31 +38,53 @@ namespace SampleWebApp.Controllers
             if (file.Length == 0)
             {              
                 return Json(new { Status = false, Msg = "File is Empty" });
-            }
-            if (IsFileIDAlreadyInUse(fileId)) {            
-                return Json(new { Status = false, Msg = "FileId already used" });
-            }
-            AddFile(fileId, file);
-            using (var stream = System.IO.File.Create(Path.Combine("D:\\Upload", file.FileName)))
-            {
-                await file.CopyToAsync(stream);              
-            }
+            }          
+            UpdateFile(fileId, file);                
             return Json(new { Status = true, Msg = "File Uploaded Successfully" });
         }
 
-        private void AddFile(string fileId, IFormFile file)
+        private void UpdateFile(string fileId, IFormFile file)
         {
-            FileDetails fileDetails = new FileDetails()
+            string fileString = string.Empty;
+            using (MemoryStream ms = new MemoryStream())
             {
-                FileID = fileId,
-                FileName = file.FileName,
-                FilePath = Path.Combine("D:\\Upload", file.FileName),
-                FileBytes = file.Length.ToString(),
-                FileType = Path.GetExtension(file.FileName)
-            };
-            _context.FileDetails.Add(fileDetails);
+                file.OpenReadStream().CopyTo(ms);
+                fileString = Convert.ToBase64String(ms.ToArray());
+            }
+            if (IsFileIDAlreadyInUse(fileId))
+            {
+                var fileDetails = _context.FileDetails.First(wh => wh.FileID == fileId);
+                fileDetails.FileName = file.FileName;
+                fileDetails.FilePath = Path.Combine(filePath, file.FileName);
+                fileDetails.FileBytes = fileString;
+                fileDetails.FileType = Path.GetExtension(file.FileName);                
+            }
+            else
+            {
+                FileDetails fileDetails = new FileDetails()
+                {
+                    FileID = fileId,
+                    FileName = file.FileName,
+                    FilePath = Path.Combine(filePath, file.FileName),
+                    FileBytes = fileString,
+                    FileType = Path.GetExtension(file.FileName)
+                };
+                _context.FileDetails.Add(fileDetails);
+            }
             _context.SaveChanges();
         }
+
+        [HttpGet]
+        public ActionResult GetFile(string fileId) {
+            var file = _context.FileDetails.FirstOrDefault(fd => fd.FileID == fileId);
+            if (file == null)
+            {
+                return Json(new { msg = "FileId does not exist." });
+            }
+            byte[] fileBytes = Convert.FromBase64String(file?.FileBytes);
+            return File(fileBytes, "application/octet-stream", file?.FileName);
+        }
+        
 
         private bool IsFileIDAlreadyInUse(string fileId)
         {

@@ -7,3 +7,8 @@
         console.log("Success");
     }
 }
+
+function getFile() {
+    var fileId = $('#getFileId').val();
+    window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId); 
+}

@@ -30,13 +30,13 @@
                         </div>
                         <div style="padding-top:30px" class="panel-body">
                             <div class="col-md-12">
-                                <form enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;" method="post" class="form-horizontal">
-                                    <div class="form-group">
-                                        <button value="view Files" class="btn btn-md btn-primary" id="viewFiles" title="Please enter File Id">View Files</button>
-                                        <div class="col-md-9">
-                                            <input type="text" class="form-control" name="passwd" placeholder="Enter file ID" >
-                                        </div>
+                                <div>
+                                    <button value="view Files" class="btn btn-md btn-primary" onclick="getFile()" title="Please enter File Id">View Files</button>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="getFileId" placeholder="Enter file ID">
                                     </div>
+                                </div>
+                                <form enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;" method="post" class="form-horizontal">
                                     <div class="panel panel-info">
                                         <div class="panel-heading">Please choose your file to upload</div>
                                         <div class="panel-body">
