@@ -1,24 +1,20 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SampleWebApp.DataAccess;
 using SampleWebApp.Models;
 using System.Linq;
-using Microsoft.Extensions.Configuration;
 
 namespace SampleWebApp.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly WebAppUploadContext _context;
-        private readonly string filePath;
-        public HomeController(WebAppUploadContext context, IConfiguration configuration)
+        private readonly WebAppUploadContext _context;      
+        public HomeController(WebAppUploadContext context)
         {
-            _context = context;
-            filePath = configuration["FilePath"];
+            _context = context;           
         }
 
         public ActionResult Index()
@@ -54,8 +50,7 @@ namespace SampleWebApp.Controllers
             if (IsFileIDAlreadyInUse(fileId))
             {
                 var fileDetails = _context.FileDetails.First(wh => wh.FileID == fileId);
-                fileDetails.FileName = file.FileName;
-                fileDetails.FilePath = Path.Combine(filePath, file.FileName);
+                fileDetails.FileName = file.FileName;           
                 fileDetails.FileBytes = fileString;
                 fileDetails.FileType = Path.GetExtension(file.FileName);                
             }
@@ -64,8 +59,7 @@ namespace SampleWebApp.Controllers
                 FileDetails fileDetails = new FileDetails()
                 {
                     FileID = fileId,
-                    FileName = file.FileName,
-                    FilePath = Path.Combine(filePath, file.FileName),
+                    FileName = file.FileName,                 
                     FileBytes = fileString,
                     FileType = Path.GetExtension(file.FileName)
                 };
@@ -75,7 +69,8 @@ namespace SampleWebApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetFile(string fileId) {
+        public ActionResult GetFile(string fileId) 
+        {
             var file = _context.FileDetails.FirstOrDefault(fd => fd.FileID == fileId);
             if (file == null)
             {
