@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using SampleWebApp.DataAccess;
 using SampleWebApp.Models;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SampleWebApp.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly WebAppUploadContext _context;      
@@ -17,11 +19,13 @@ namespace SampleWebApp.Controllers
             _context = context;           
         }
 
+        #region Public Action methods
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View();
         }
-
+       
         [HttpPost]
         public JsonResult UploadFiles([FromForm] IFormCollection formData)
         {
@@ -38,6 +42,34 @@ namespace SampleWebApp.Controllers
             UpdateFile(fileId, file);                
             return Json(new { Status = true, Msg = "File Uploaded Successfully" });
         }
+      
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult GetFile(string fileId) 
+        {
+            var file = _context.FileDetails.FirstOrDefault(fd => fd.FileID == fileId);
+            if (file == null)
+            {
+                return Json(new { msg = "FileId does not exist." });
+            }
+            byte[] fileBytes = Convert.FromBase64String(file?.FileBytes);
+            return File(fileBytes, "application/octet-stream", file?.FileName);
+        }
+
+
+        [AllowAnonymous]
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+        #endregion
+
+        #region Private HelperMehtods        
+        private bool IsFileIDAlreadyInUse(string fileId)
+        {
+            return !string.IsNullOrWhiteSpace(fileId) && _context.FileDetails.Any(wh => wh.FileID == fileId);        
+        }
 
         private void UpdateFile(string fileId, IFormFile file)
         {
@@ -50,16 +82,16 @@ namespace SampleWebApp.Controllers
             if (IsFileIDAlreadyInUse(fileId))
             {
                 var fileDetails = _context.FileDetails.First(wh => wh.FileID == fileId);
-                fileDetails.FileName = file.FileName;           
+                fileDetails.FileName = file.FileName;
                 fileDetails.FileBytes = fileString;
-                fileDetails.FileType = Path.GetExtension(file.FileName);                
+                fileDetails.FileType = Path.GetExtension(file.FileName);
             }
             else
             {
                 FileDetails fileDetails = new FileDetails()
                 {
                     FileID = fileId,
-                    FileName = file.FileName,                 
+                    FileName = file.FileName,
                     FileBytes = fileString,
                     FileType = Path.GetExtension(file.FileName)
                 };
@@ -67,30 +99,6 @@ namespace SampleWebApp.Controllers
             }
             _context.SaveChanges();
         }
-
-        [HttpGet]
-        public ActionResult GetFile(string fileId) 
-        {
-            var file = _context.FileDetails.FirstOrDefault(fd => fd.FileID == fileId);
-            if (file == null)
-            {
-                return Json(new { msg = "FileId does not exist." });
-            }
-            byte[] fileBytes = Convert.FromBase64String(file?.FileBytes);
-            return File(fileBytes, "application/octet-stream", file?.FileName);
-        }
-        
-
-        private bool IsFileIDAlreadyInUse(string fileId)
-        {
-            return !string.IsNullOrWhiteSpace(fileId) && _context.FileDetails.Any(wh => wh.FileID == fileId);        
-        }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        }
+        #endregion
     }
 }

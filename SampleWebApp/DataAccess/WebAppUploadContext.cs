@@ -13,5 +13,6 @@ namespace SampleWebApp.DataAccess
         {
         }
         public DbSet<FileDetails> FileDetails { get; set; }
+        public DbSet<UserDetails> UserDetails { get; set; }
     }
 }
