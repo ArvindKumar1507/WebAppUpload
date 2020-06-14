@@ -1,13 +1,19 @@
 ﻿function AJAXSubmit(oFormElement) {
+    $("#spinnerContainer").show();
     var response = fetch('Home/UploadFiles', {
         method: 'POST',
         body: new FormData(oFormElement)
+    })
+    //.then(response => response.json())
+    .then(data => {
+        $("#spinnerContainer").hide();
+        alert("File uploaded successfully!");
+    })
+    .catch((error) => {
+        $("#spinnerContainer").hide();
+        alert("File not uploaded successfully!");
     });
-    if (response.ok) {
-        console.log("Success");
-    }
 }
-
 function getFile() {
     var fileId = $('#getFileId').val();
     window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId); 
