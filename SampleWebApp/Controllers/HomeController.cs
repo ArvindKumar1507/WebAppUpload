@@ -9,8 +9,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 
 namespace SampleWebApp.Controllers
-{
-    [Authorize]
+{    
     public class HomeController : Controller
     {
         private readonly WebAppUploadContext _context;      
@@ -20,12 +19,13 @@ namespace SampleWebApp.Controllers
         }
 
         #region Public Action methods
-        [AllowAnonymous]
+        
         public ActionResult Index()
         {
             return View();
         }
-       
+
+        [Authorize]
         [HttpPost]
         public JsonResult UploadFiles([FromForm] IFormCollection formData)
         {
@@ -37,27 +37,32 @@ namespace SampleWebApp.Controllers
             }            
             if (file.Length == 0)
             {              
-                return Json(new { Status = false, Msg = "File is Empty" });
+                return Json(new GenericResponse  { Status = false, Message = "File is Empty" });
             }          
             UpdateFile(fileId, file);                
-            return Json(new { Status = true, Msg = "File Uploaded Successfully" });
+            return Json(new GenericResponse { Status = true, Message = "File Uploaded Successfully" });
         }
       
-        [AllowAnonymous]
+        
         [HttpGet]
         public ActionResult GetFile(string fileId) 
         {
-            var file = _context.FileDetails.FirstOrDefault(fd => fd.FileID == fileId);
+            var file = _context.FileDetails.FirstOrDefault(fd => fd.FileId == fileId);
             if (file == null)
             {
-                return Json(new { msg = "FileId does not exist." });
+                return Json(new GenericResponse  { Message = "FileId does not exist.", Status = false });
             }
             byte[] fileBytes = Convert.FromBase64String(file?.FileBytes);
             return File(fileBytes, "application/octet-stream", file?.FileName);
         }
 
-
-        [AllowAnonymous]
+        [HttpGet]
+        public JsonResult GetFiles() 
+        {
+            int userId = 1;//Need to get Current User Id
+            return Json(_context.FileDetails.Where(wh => wh.UserId == userId));
+        }
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -68,7 +73,7 @@ namespace SampleWebApp.Controllers
         #region Private HelperMehtods        
         private bool IsFileIDAlreadyInUse(string fileId)
         {
-            return !string.IsNullOrWhiteSpace(fileId) && _context.FileDetails.Any(wh => wh.FileID == fileId);        
+            return !string.IsNullOrWhiteSpace(fileId) && _context.FileDetails.Any(wh => wh.FileId == fileId);        
         }
 
         private void UpdateFile(string fileId, IFormFile file)
@@ -81,7 +86,7 @@ namespace SampleWebApp.Controllers
             }
             if (IsFileIDAlreadyInUse(fileId))
             {
-                var fileDetails = _context.FileDetails.First(wh => wh.FileID == fileId);
+                var fileDetails = _context.FileDetails.First(wh => wh.FileId == fileId);
                 fileDetails.FileName = file.FileName;
                 fileDetails.FileBytes = fileString;
                 fileDetails.FileType = Path.GetExtension(file.FileName);
@@ -90,7 +95,7 @@ namespace SampleWebApp.Controllers
             {
                 FileDetails fileDetails = new FileDetails()
                 {
-                    FileID = fileId,
+                    FileId = fileId,
                     FileName = file.FileName,
                     FileBytes = fileString,
                     FileType = Path.GetExtension(file.FileName)

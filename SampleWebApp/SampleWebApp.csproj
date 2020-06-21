@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200613124607_Initial1.cs" />
+    <Compile Remove="Migrations\20200613124607_Initial1.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\scripts\index.js" />
   </ItemGroup>
 

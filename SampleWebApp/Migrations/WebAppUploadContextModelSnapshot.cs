@@ -20,19 +20,25 @@ namespace SampleWebApp.Migrations
 
             modelBuilder.Entity("SampleWebApp.Models.FileDetails", b =>
                 {
-                    b.Property<string>("FileID")
+                    b.Property<string>("FileId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FileBytes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FileID");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FileId");
 
                     b.ToTable("FileDetails");
                 });
@@ -45,15 +51,18 @@ namespace SampleWebApp.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");

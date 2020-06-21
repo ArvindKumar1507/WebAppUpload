@@ -25,27 +25,46 @@ namespace SampleWebApp.Controllers
             bool isUserNameExist = _context.UserDetails.Any(any => any.Email == userDetails.Email);
             if (isUserNameExist)
             {
-                return Json(new { msg = "User Name exists", Status = false });
+                return Json(new GenericResponse { Message = "User Name exists", Status = false });
             }
             if (userDetails != null)
             {
                 _context.UserDetails.Add(userDetails);
                 _context.SaveChanges();
-                return Json(new { msg = "Signed Up successfully", Status = true });
+                return Json(new GenericResponse { Message = "Signed Up successfully", Status = true });
             }
-            return Json(new { msg = "Please try again later", Status = false });
+            return Json(new GenericResponse { Message = "Please try again later", Status = false });
         }
 
         [AllowAnonymous]
         [HttpPost]
         public JsonResult SingIn([FromBody] UserDetails userDetails)
         {
-            List<Claim> claims = new List<Claim>();
-            claims.Add(new Claim("UserDetails", "arvind.kumar"));
-            ClaimsIdentity userIdentity = new ClaimsIdentity(claims);
+            var signInUser = _context.UserDetails.FirstOrDefault(wh => wh.Email == userDetails.Email && wh.Password == userDetails.Password);
+            if (signInUser == null) 
+            {
+                return Json(new GenericResponse { Message = "Invalid Email or Password", Status = false });
+            }
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, signInUser.UserName),
+                new Claim(ClaimTypes.Email, signInUser.Email),                
+                new Claim(ClaimTypes.UserData, signInUser.ToString()),
+            };
+
+            ClaimsIdentity userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
             ClaimsPrincipal principal = new ClaimsPrincipal(userIdentity);
-            HttpContext.SignInAsync(principal);
-            return Json(new { msg = "Singed in Successfully" });
+
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+            return Json(new GenericResponse { Message = "Singed in Successfully", Status = true });
+        }
+
+               
+        public void SignOut()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         }
     }
 }

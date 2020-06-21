@@ -9,8 +9,8 @@ using SampleWebApp.DataAccess;
 namespace SampleWebApp.Migrations
 {
     [DbContext(typeof(WebAppUploadContext))]
-    [Migration("20200613124607_Initial1")]
-    partial class Initial1
+    [Migration("20200621140506_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,19 +22,25 @@ namespace SampleWebApp.Migrations
 
             modelBuilder.Entity("SampleWebApp.Models.FileDetails", b =>
                 {
-                    b.Property<string>("FileID")
+                    b.Property<string>("FileId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FileBytes")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("FileID");
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FileId");
 
                     b.ToTable("FileDetails");
                 });
@@ -47,15 +53,18 @@ namespace SampleWebApp.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PhoneNumber")
                         .HasColumnType("int");
 
                     b.Property<string>("UserName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
