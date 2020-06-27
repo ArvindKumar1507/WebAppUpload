@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System;
 
 namespace SampleWebApp.Models
 {
@@ -19,5 +20,8 @@ namespace SampleWebApp.Models
         public string Password { get; set; }
 
         public int PhoneNumber { get; set; }
+
+        [Required]
+        public DateTime CreatedTime { get; set; }
     }
 }

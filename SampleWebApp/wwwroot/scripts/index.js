@@ -20,7 +20,7 @@
 
 function getFile() {
     var fileId = $('#getFileId').val();
-    window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId); 
+    window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId);    
 }
 
 function removeFileAttached() {
@@ -42,7 +42,7 @@ function signIn(loginUsername, loginPassword)
             $("#login-alert").hide();
             $("#login-danger-alert").show();
         }
-        //location.href = window.location.origin + "/Home/Dashboard.cshtml";
+        location.href = window.location.origin + "/Home/Dashboard";
     };
     var signInError = function errorCallback(err) {
         $("#login-alert").hide();
@@ -107,7 +107,8 @@ function signUp()
         {
             UserName: regUsername,
             Email: regEmail,
-            Password: regPassword            
+            Password: regPassword,
+            PhoneNumber: Number(regContact)
         };
         var signInSuccess = function successCallback(response) {
             $("#spinnerContainer").hide();

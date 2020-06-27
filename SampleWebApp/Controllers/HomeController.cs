@@ -25,6 +25,11 @@ namespace SampleWebApp.Controllers
             return View();
         }
 
+        public ActionResult Dashboard() 
+        {
+            return View("Dashboard");
+        }
+
         [Authorize]
         [HttpPost]
         public JsonResult UploadFiles([FromForm] IFormCollection formData)
@@ -60,7 +65,7 @@ namespace SampleWebApp.Controllers
         public JsonResult GetFiles() 
         {
             int userId = 1;//Need to get Current User Id
-            return Json(_context.FileDetails.Where(wh => wh.UserId == userId));
+            return Json(_context.FileDetails.Where(wh => wh.CreatedBy == userId));
         }
         
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

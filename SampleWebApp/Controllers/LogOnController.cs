@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SampleWebApp.DataAccess;
 using SampleWebApp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace SampleWebApp.Controllers
 {
@@ -29,6 +31,7 @@ namespace SampleWebApp.Controllers
             }
             if (userDetails != null)
             {
+                userDetails.CreatedTime = DateTime.UtcNow;
                 _context.UserDetails.Add(userDetails);
                 _context.SaveChanges();
                 return Json(new GenericResponse { Message = "Signed Up successfully", Status = true });
@@ -45,11 +48,12 @@ namespace SampleWebApp.Controllers
             {
                 return Json(new GenericResponse { Message = "Invalid Email or Password", Status = false });
             }
+            var userData = JsonSerializer.Serialize(signInUser);
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, signInUser.UserName),
                 new Claim(ClaimTypes.Email, signInUser.Email),                
-                new Claim(ClaimTypes.UserData, signInUser.ToString()),
+                new Claim(ClaimTypes.UserData, userData),
             };
 
             ClaimsIdentity userIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

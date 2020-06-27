@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SampleWebApp.Models
 {
@@ -17,6 +18,13 @@ namespace SampleWebApp.Models
         public string FileType { get; set; }
 
         [Required]
-        public int UserId { get; set; }
+        public int CreatedBy { get; set; }
+
+        [Required]
+        public DateTime CreatedTime { get; set; }
+
+        public int ModifiedBy { get; set; }
+
+        public DateTime ModifiedTime { get; set; }
     }
 }
