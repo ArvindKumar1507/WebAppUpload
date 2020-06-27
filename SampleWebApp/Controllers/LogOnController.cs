@@ -20,7 +20,7 @@ namespace SampleWebApp.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public JsonResult SingUp(UserDetails userDetails)
+        public JsonResult SingUp([FromBody] UserDetails userDetails)
         {
             bool isUserNameExist = _context.UserDetails.Any(any => any.Email == userDetails.Email);
             if (isUserNameExist)

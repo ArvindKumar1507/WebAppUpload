@@ -31,20 +31,6 @@ $('#newfileID').keydown(function () {
     }
 });
 
-$('#btn-signup').click(function () {
-    var regUsername = $("#regUsername").val();
-    var regPassword = $("#regPassword").val();
-    var regEmail = $("#regEmail").val();
-    var regContact = $("#regContact").val();
-    if (regUsername != "" && regPassword != "" && regEmail != "" && regContact != "" && validEmail == true) {
-        $("#register-alert").hide();
-        alert("Regster");
-    }
-    else {
-        $("#register-alert").show();
-    }
-});
-
 $('#regEmail').blur(function () {
     var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
     if (testEmail.test(this.value)) {
@@ -56,3 +42,27 @@ $('#regEmail').blur(function () {
         $("#email-alert").show();
     }
 });
+
+
+function validateLogin() {
+    let loginUsername = $("#login-username").val();
+    let loginPassword = $("#login-password").val();
+
+    if (loginUsername == "") {
+        $("#login-alert").show();
+        $("#login-username").addClass("errorClass");
+        return;
+    } else if (loginPassword == "") {
+        $("#login-alert").show();
+        $("#login-username").removeClass("errorClass");
+        $("#login-password").addClass("errorClass");
+        return;
+    }
+    else {
+        $("#login-username").removeClass("errorClass");
+        $("#login-password").removeClass("errorClass");
+    }    
+
+    signIn(loginUsername, loginPassword);
+
+}
