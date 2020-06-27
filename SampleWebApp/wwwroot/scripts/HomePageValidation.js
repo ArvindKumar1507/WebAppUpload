@@ -22,6 +22,14 @@ $('#files').change(function () {
     }
 });
 
+
+
+$('#removeFile').on('click', function (e) {
+    var $el = $('#files');
+    $el.wrap('<form>').closest('form').get(0).reset();
+    $el.unwrap();
+});
+
 $('#newfileID').keydown(function () {
     if ($(this).val().length > 4 && $("#files").val()) {
         $('#uploadFiles').attr('disabled', false);
@@ -31,17 +39,7 @@ $('#newfileID').keydown(function () {
     }
 });
 
-$('#regEmail').blur(function () {
-    var testEmail = /^[A-Z0-9._%+-]+@([A-Z0-9-]+\.)+[A-Z]{2,4}$/i;
-    if (testEmail.test(this.value)) {
-        validEmail = true;
-        $("#email-alert").hide();
-    }
-    else {
-        validEmail = false;
-        $("#email-alert").show();
-    }
-});
+
 
 
 function validateLogin() {
@@ -66,3 +64,5 @@ function validateLogin() {
     signIn(loginUsername, loginPassword);
 
 }
+
+

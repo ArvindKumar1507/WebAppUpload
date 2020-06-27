@@ -6,10 +6,13 @@
     height: 75px;
 }
 
-#login-alert, #login-success, #register-alert, #email-alert {
+#login-alert, #login-success, #register-alert, #email-alert, #password-alert, #mobile-alert, #register-success-alert, #register-danger-alert, #login-danger-alert, #login-success-alert {
     display: none;
 }
-
+#removeFile{
+    float:right;
+    margin-bottom: 15px;
+}
 .flex-container {
     display: flex;
 }
@@ -79,3 +82,32 @@
     }
 }
 
+#signupbox .form-group {
+    padding-bottom: 30px;
+}
+#launchModal{
+    display:none;
+}
+
+.modal {
+}
+
+.vertical-alignment-helper {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.vertical-align-center {
+    /* To center vertically */
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.modal-content {
+    /* Bootstrap sets the size of the modal in the modal-dialog class, we need to inherit it */
+    width: inherit;
+    height: inherit;
+    /* To center horizontally */
+    margin: 0 auto;
+}
