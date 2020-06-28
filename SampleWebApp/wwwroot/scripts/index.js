@@ -3,24 +3,24 @@
     var response = fetch('Home/UploadFiles', {
         method: 'POST',
         body: new FormData(oFormElement)
-    })    
-    .then(data => {
-        if (data.status !== 200) {
-            $("#launchModal").trigger("click");
-        }
-        removeFileAttached();
-        $("#spinnerContainer").hide();
     })
-    .catch((error) => {
-        removeFileAttached();
-        $("#spinnerContainer").hide();
-        alert("Some error in the server. Kindly contact admin.");
-    });
+        .then(data => {
+            if (data.status !== 200) {
+                $("#launchModal").trigger("click");
+            }
+            removeFileAttached();
+            $("#spinnerContainer").hide();
+        })
+        .catch((error) => {
+            removeFileAttached();
+            $("#spinnerContainer").hide();
+            alert("Some error in the server. Kindly contact admin.");
+        });
 }
 
 function getFile() {
     var fileId = $('#getFileId').val();
-    window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId);    
+    window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId);
 }
 
 function removeFileAttached() {
@@ -29,20 +29,19 @@ function removeFileAttached() {
     $el.unwrap();
 }
 
-function signIn(loginUsername, loginPassword)
-{
+function signIn(loginUsername, loginPassword) {
     var userData = { UserName: loginUsername, Email: loginUsername, Password: loginPassword };
     var signInSuccess = function successCallback(response) {
         if (response.status == true) {
             $("#login-alert").hide();
             $("#login-danger-alert").hide();
             $("#login-success-alert").show();
+            location.href = window.location.origin + "Home/Dashboard";
         }
         else {
             $("#login-alert").hide();
             $("#login-danger-alert").show();
         }
-        location.href = window.location.origin + "/Home/Dashboard";
     };
     var signInError = function errorCallback(err) {
         $("#login-alert").hide();
@@ -53,8 +52,7 @@ function signIn(loginUsername, loginPassword)
     ajaxRequest("LogOn/SingIn", signInSuccess, signInError, userData);
 }
 
-function ajaxRequest(url, successCallback, errorCallback, data)
-{
+function ajaxRequest(url, successCallback, errorCallback, data) {
     $.ajax({
         type: 'POST',
         url: url,
@@ -68,8 +66,7 @@ function ajaxRequest(url, successCallback, errorCallback, data)
 }
 
 
-function signUp()
-{
+function signUp() {
     var regUsername = $("#regUsername").val();
     var regPassword = $("#regPassword").val();
     var regEmail = $("#regEmail").val();
@@ -119,15 +116,28 @@ function signUp()
             else {
                 $("#register-danger-alert").show();
             }
-            
+
         };
         var signInError = function errorCallback(err) {
             $("#spinnerContainer").hide();
         }
 
-        ajaxRequest("LogOn/SingUp", signInSuccess, signInError, userData); 
+        ajaxRequest("LogOn/SingUp", signInSuccess, signInError, userData);
         $("#spinnerContainer").show();
     }
 
-   
+
+
+}
+
+function logOut() {
+    console.log('check');
+    $.ajax({
+        url: 'LogOn/SignOut',
+        type: 'GET',
+        success: function (res) {
+
+        },
+        errror: function (err) { }
+    })
 }
