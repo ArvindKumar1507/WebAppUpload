@@ -2,7 +2,8 @@
 
 $(document).ready(function () {
     $('#viewFiles').prop('disabled', true);
-    $("#spinnerContainer").hide();
+    $('#uploadFileBtn').prop('disabled', true);
+    $("#spinnerContainer").hide(); 
 });
 
 $(document).on("keyup", "#getFileId", function () {
@@ -12,6 +13,16 @@ $(document).on("keyup", "#getFileId", function () {
     }
     else {
         $('#viewFiles').prop('disabled', true);
+    }
+});
+
+$(document).on("keyup", "#newfileID", function () {
+    var newfileIdLen = $(this).val().length;
+    if (newfileIdLen > 3) {
+        $('#uploadFileBtn').prop('disabled', false);
+    }
+    else {
+        $('#uploadFileBtn').prop('disabled', true);
     }
 });
 

@@ -4,18 +4,21 @@
         method: 'POST',
         body: new FormData(oFormElement)
     })
-        .then(data => {
-            if (data.status !== 200) {
-                $("#launchModal").trigger("click");
-            }
-            removeFileAttached();
-            $("#spinnerContainer").hide();
-        })
-        .catch((error) => {
-            removeFileAttached();
-            $("#spinnerContainer").hide();
-            alert("Some error in the server. Kindly contact admin.");
-        });
+    .then(data => {
+        if (data.status === 404) {
+            $("#launchModal").trigger("click");
+        }
+        removeFileAttached();
+        $("#spinnerContainer").hide();
+        if (data.status === 200) {
+            alert(data.message);
+        }
+    })
+    .catch((error) => {
+        removeFileAttached();
+        $("#spinnerContainer").hide();
+        alert("Some error in the server. Kindly contact admin.");
+    });
 }
 
 function getFile() {
@@ -33,23 +36,27 @@ function signIn(loginUsername, loginPassword) {
     var userData = { UserName: loginUsername, Email: loginUsername, Password: loginPassword };
     var signInSuccess = function successCallback(response) {
         if (response.status == true) {
+            $("#spinnerContainer").hide();
             $("#login-alert").hide();
             $("#login-danger-alert").hide();
             $("#login-success-alert").show();
             location.href = window.location.origin + "/Home/Dashboard";
         }
         else {
+            $("#spinnerContainer").hide();
             $("#login-alert").hide();
             $("#login-danger-alert").show();
         }
     };
     var signInError = function errorCallback(err) {
+        $("#spinnerContainer").hide();
         $("#login-alert").hide();
         $("#login-danger-alert").show();
         $("#login-success-alert").hide();
     }
 
     ajaxRequest("/LogOn/SingIn", signInSuccess, signInError, userData);
+    $("#spinnerContainer").show();
 }
 
 function ajaxRequest(url, successCallback, errorCallback, data) {
@@ -114,6 +121,7 @@ function signUp() {
                 $("#register-success-alert").show();
             }
             else {
+                $("#spinnerContainer").hide();
                 $("#register-danger-alert").show();
             }
 
