@@ -1,4 +1,9 @@
-﻿function AJAXSubmit(oFormElement) {
+﻿$(document).ready(function () {
+    if (localStorage.getItem('userName'))
+        $('#user-name').html(localStorage.getItem('userName'));
+});
+
+function AJAXSubmit(oFormElement) {
     $("#spinnerContainer").show();
     var response = fetch('/Home/UploadFiles', {
         method: 'POST',
@@ -35,12 +40,13 @@ function removeFileAttached() {
 function signIn(loginUsername, loginPassword) {
     var userData = { UserName: loginUsername, Email: loginUsername, Password: loginPassword };
     var signInSuccess = function successCallback(response) {
-        if (response.status == true) {
+        if (response && response.statusResponse) {
             $("#spinnerContainer").hide();
             $("#login-alert").hide();
             $("#login-danger-alert").hide();
             $("#login-success-alert").show();
-            location.href = window.location.origin + "/Home/Dashboard";
+            localStorage.setItem('userName', response.userName);
+            location.href = window.location.origin + "/Home/Dashboard";                     
         }
         else {
             $("#spinnerContainer").hide();
@@ -145,6 +151,7 @@ function logOut() {
         success: function (res) { 
             if (res && res.status)
             {
+                localStorage.clear();
                 location.href = window.location.origin;
             }
         },

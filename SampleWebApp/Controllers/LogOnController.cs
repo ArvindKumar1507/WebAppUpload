@@ -44,7 +44,7 @@ namespace SampleWebApp.Controllers
         public JsonResult SingIn([FromBody] UserDetails userDetails)
         {
             var signInUser = _context.UserDetails.FirstOrDefault(wh => wh.Email == userDetails.Email && wh.Password == userDetails.Password);
-            if (signInUser == null) 
+            if (signInUser == null)
             {
                 return Json(new GenericResponse { Message = "Invalid Email or Password", Status = false });
             }
@@ -52,7 +52,7 @@ namespace SampleWebApp.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, signInUser.UserName),
-                new Claim(ClaimTypes.Email, signInUser.Email),                
+                new Claim(ClaimTypes.Email, signInUser.Email),
                 new Claim(ClaimTypes.UserData, userData),
             };
 
@@ -62,7 +62,8 @@ namespace SampleWebApp.Controllers
 
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return Json(new GenericResponse { Message = "Singed in Successfully", Status = true });
+            return Json(new SignInResponse { StatusResponse =
+                new GenericResponse { Message = "Singed in Successfully", Status = true }, UserName = signInUser.UserName});
         }
               
         public JsonResult SignOut()

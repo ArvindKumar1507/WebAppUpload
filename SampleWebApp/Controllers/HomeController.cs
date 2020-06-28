@@ -66,9 +66,8 @@ namespace SampleWebApp.Controllers
 
         [HttpGet]
         public JsonResult GetFiles()
-        {
-            int userId = 1;//Need to get Current User Id
-            return Json(_context.FileDetails.Where(wh => wh.CreatedBy == userId));
+        {           
+            return Json(_context.FileDetails.Where(wh => wh.CreatedBy == CurrentUser.UserId));
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
