@@ -64,11 +64,11 @@ namespace SampleWebApp.Controllers
 
             return Json(new GenericResponse { Message = "Singed in Successfully", Status = true });
         }
-
-               
-        public void SignOut()
+              
+        public JsonResult SignOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return Json(new GenericResponse { Status = true, Message = "Logged Out Successfully" });
         }
     }
 }

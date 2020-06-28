@@ -1,6 +1,6 @@
 ﻿function AJAXSubmit(oFormElement) {
     $("#spinnerContainer").show();
-    var response = fetch('Home/UploadFiles', {
+    var response = fetch('/Home/UploadFiles', {
         method: 'POST',
         body: new FormData(oFormElement)
     })
@@ -36,7 +36,7 @@ function signIn(loginUsername, loginPassword) {
             $("#login-alert").hide();
             $("#login-danger-alert").hide();
             $("#login-success-alert").show();
-            location.href = window.location.origin + "Home/Dashboard";
+            location.href = window.location.origin + "/Home/Dashboard";
         }
         else {
             $("#login-alert").hide();
@@ -49,7 +49,7 @@ function signIn(loginUsername, loginPassword) {
         $("#login-success-alert").hide();
     }
 
-    ajaxRequest("LogOn/SingIn", signInSuccess, signInError, userData);
+    ajaxRequest("/LogOn/SingIn", signInSuccess, signInError, userData);
 }
 
 function ajaxRequest(url, successCallback, errorCallback, data) {
@@ -122,7 +122,7 @@ function signUp() {
             $("#spinnerContainer").hide();
         }
 
-        ajaxRequest("LogOn/SingUp", signInSuccess, signInError, userData);
+        ajaxRequest("/LogOn/SingUp", signInSuccess, signInError, userData);
         $("#spinnerContainer").show();
     }
 
@@ -133,10 +133,12 @@ function signUp() {
 function logOut() {
     console.log('check');
     $.ajax({
-        url: 'LogOn/SignOut',
-        type: 'GET',
-        success: function (res) {
-
+        url: '/LogOn/SignOut',        
+        success: function (res) { 
+            if (res && res.status)
+            {
+                location.href = window.location.origin;
+            }
         },
         errror: function (err) { }
     })
