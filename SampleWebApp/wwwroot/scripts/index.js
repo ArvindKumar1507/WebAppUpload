@@ -31,6 +31,27 @@ function getFile() {
     window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId);
 }
 
+function getFiles() {
+    $.ajax({
+        url: "/Home/GetFiles",
+        type: "GET",
+        success: function (response) {
+            $("#listFiles").show();
+            var trHTML = '';
+            $.each(response, function (i, item) {
+                trHTML += '<tr><td>' + item.fileId + '</td><td>' + item.fileName + '</td><td>' + new Date(item.createdTime) + '</td></tr>';
+            });
+            $('#listFiles').append(trHTML);
+            $('#getFiles').css("cursor", "not-allowed").prop("disabled", "true");
+
+        },
+        error: function () {
+            $("#listFiles").hide();
+        }
+    })
+}
+
+
 function removeFileAttached() {
     var $el = $('#files');
     $el.wrap('<form>').closest('form').get(0).reset();
@@ -145,7 +166,6 @@ function signUp() {
 }
 
 function logOut() {
-    console.log('check');
     $.ajax({
         url: '/LogOn/SignOut',        
         success: function (res) { 

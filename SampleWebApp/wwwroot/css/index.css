@@ -89,9 +89,9 @@
     display:none;
 }
 
-.modal {
+#listFiles{
+    display:none;
 }
-
 .vertical-alignment-helper {
     display: table;
     height: 100%;
