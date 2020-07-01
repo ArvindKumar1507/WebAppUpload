@@ -9,6 +9,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Text.Json;
+using System.Collections.Generic;
+using SampleWebApp.Models.BusinessModels;
 
 namespace SampleWebApp.Controllers
 {
@@ -37,7 +39,7 @@ namespace SampleWebApp.Controllers
         [HttpPost]
         public JsonResult UploadFiles([FromForm] IFormCollection formData)
         {
-            IFormFile file = HttpContext.Request.Form.Files?[0];
+            IFormFile file = HttpContext.Request?.Form?.Files?[0];
             string fileId = formData["passwd"];
             if (file == null || file.Length == 0)
             {
@@ -66,8 +68,18 @@ namespace SampleWebApp.Controllers
 
         [HttpGet]
         public JsonResult GetFiles()
-        {           
-            return Json(_context.FileDetails.Where(wh => wh.CreatedBy == CurrentUser.UserId));
+        {
+          List<FileDetails> fileDetails = _context.FileDetails.Where(wh => wh.CreatedBy == CurrentUser.UserId).ToList();
+            List<BusinessFile> busineesFiles = new List<BusinessFile>();
+            fileDetails.ForEach(f =>
+            {
+                var businessFile = new BusinessFile();
+                businessFile.FileId = f.FileId;
+                businessFile.FileName = f.FileName;
+                businessFile.FileType = f.FileType;
+                businessFile.CreatedTime = f.CreatedTime;                
+            });
+            return Json(fileDetails);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

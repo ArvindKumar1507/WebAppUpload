@@ -47,7 +47,7 @@
                 <img src="~/images/css-loading-spinners.gif" style="display:none" id="spinner" />
             </div>
 
-           
+
 
             <div class="col-sm-3 row1Left">
                 <div class="panel panel-info">
@@ -73,7 +73,7 @@
                                     </div>
                                 </div>
                                 <div style="margin-top:20px">
-                                    <form enctype="multipart/form-data" onsubmit="AJAXSubmit(this);return false;" method="post" class="form-horizontal">
+                                    <div class="form-horizontal">
                                         <div class="panel panel-info">
                                             <div class="panel-heading">Please choose your file to upload</div>
                                             <div class="panel-body">
@@ -85,11 +85,11 @@
                                                             <input type="text" class="form-control" name="passwd" placeholder="Create file ID" id="newfileID">
                                                         </div>
                                                     </div>
-                                                    <input type="submit" value="Upload Files" class="btn btn-md btn-primary" id="uploadFileBtn" />
+                                                    <input type="button" value="Upload Files" class="btn btn-md btn-primary" onclick="UploadFiles()" />
                                                 </div>
                                             </div>
                                         </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -224,7 +224,7 @@
 
             </div>
 
-           
+
 
         </div>
 

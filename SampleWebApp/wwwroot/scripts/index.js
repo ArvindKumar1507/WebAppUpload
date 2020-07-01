@@ -3,26 +3,56 @@
         $('#user-name').html(localStorage.getItem('userName'));
 });
 
-function AJAXSubmit(oFormElement) {
+function ajaxRequest(url, successCallback, errorCallback, data, type, contentType = "application/json; charset=utf-8") {
+    $.ajax({
+        type: type,
+        url: url,
+        contentType: contentType,
+        data: JSON.stringify(data),
+        async: true,
+        dataType: "json",
+        success: successCallback,
+        errror: errorCallback
+    });
+}
+
+function UploadFiles() {
     $("#spinnerContainer").show();
-    var response = fetch('/Home/UploadFiles', {
-        method: 'POST',
-        body: new FormData(oFormElement)
-    })
-    .then(data => {
-        if (data.status === 404) {
-            $("#launchModal").trigger("click");
-        }
+    var data = new FormData();
+    if (!$('#files')[0].files || !$('#files')[0].files.length)
+    {
+        alert('Please choose a file to upload');
+        $("#spinnerContainer").hide();
+        return;
+    }
+    $.each($('#files')[0].files, function (i, file) {
+        data.append('file-' + i, file);
+        data.append('passwd', $('#newfileID').val());
+    });
+    var success = function (data) {
         removeFileAttached();
         $("#spinnerContainer").hide();
-        if (data.status === 200) {
-            alert(data.message);
+        alert(data.message);
+    };
+    var error = function (error) {
+        if (error.status == 401)
+        {
+            //show message to use as unauthorized
         }
-    })
-    .catch((error) => {
         removeFileAttached();
         $("#spinnerContainer").hide();
         alert("Some error in the server. Kindly contact admin.");
+    };
+    $.ajax({
+        url: '/Home/UploadFiles',
+        data: data,
+        contentType: false,
+        cache: false,
+        type: 'POST',
+        method: 'POST',
+        processData: false,
+        success: success,
+        error: error
     });
 }
 
@@ -32,25 +62,20 @@ function getFile() {
 }
 
 function getFiles() {
-    $.ajax({
-        url: "/Home/GetFiles",
-        type: "GET",
-        success: function (response) {
-            $("#listFiles").show();
-            var trHTML = '';
-            $.each(response, function (i, item) {
-                trHTML += '<tr><td>' + item.fileId + '</td><td>' + item.fileName + '</td><td>' + new Date(item.createdTime) + '</td></tr>';
-            });
-            $('#listFiles').append(trHTML);
-            $('#getFiles').css("cursor", "not-allowed").prop("disabled", "true");
-
-        },
-        error: function () {
-            $("#listFiles").hide();
-        }
-    })
+    var success = function (response) {
+        $("#listFiles").show();
+        var trHTML = '';
+        $.each(response, function (i, item) {
+            trHTML += '<tr><td>' + item.fileId + '</td><td>' + item.fileName + '</td><td>' + new Date(item.createdTime) + '</td></tr>';
+        });
+        $('#listFiles').append(trHTML);
+        $('#getFiles').css("cursor", "not-allowed").prop("disabled", "true");
+    };
+    var error = function () {
+        $("#listFiles").hide();
+    }
+    ajaxRequest("/Home/GetFiles", success, error, null, 'GET');
 }
-
 
 function removeFileAttached() {
     var $el = $('#files');
@@ -67,7 +92,7 @@ function signIn(loginUsername, loginPassword) {
             $("#login-danger-alert").hide();
             $("#login-success-alert").show();
             localStorage.setItem('userName', response.userName);
-            location.href = window.location.origin + "/Home/Dashboard";                     
+            location.href = window.location.origin + "/Home/Dashboard";
         }
         else {
             $("#spinnerContainer").hide();
@@ -81,22 +106,8 @@ function signIn(loginUsername, loginPassword) {
         $("#login-danger-alert").show();
         $("#login-success-alert").hide();
     }
-
-    ajaxRequest("/LogOn/SingIn", signInSuccess, signInError, userData);
+    ajaxRequest("/LogOn/SingIn", signInSuccess, signInError, userData, 'POST');
     $("#spinnerContainer").show();
-}
-
-function ajaxRequest(url, successCallback, errorCallback, data) {
-    $.ajax({
-        type: 'POST',
-        url: url,
-        contentType: "application/json; charset=utf-8",
-        data: JSON.stringify(data),
-        async: true,
-        dataType: "json",
-        success: successCallback,
-        errror: errorCallback
-    });
 }
 
 
@@ -157,7 +168,7 @@ function signUp() {
             $("#spinnerContainer").hide();
         }
 
-        ajaxRequest("/LogOn/SingUp", signInSuccess, signInError, userData);
+        ajaxRequest("/LogOn/SingUp", signInSuccess, signInError, userData, 'POST');
         $("#spinnerContainer").show();
     }
 
@@ -166,15 +177,12 @@ function signUp() {
 }
 
 function logOut() {
-    $.ajax({
-        url: '/LogOn/SignOut',        
-        success: function (res) { 
-            if (res && res.status)
-            {
-                localStorage.clear();
-                location.href = window.location.origin;
-            }
-        },
-        errror: function (err) { }
-    })
+    ajaxRequest('/LogOn/SignOut', function (res) {
+        if (res && res.status) {
+            localStorage.clear();
+            location.href = window.location.origin;
+        }
+    }, function (err) { console.log(err) }, null, 'GET');
 }
+
+
