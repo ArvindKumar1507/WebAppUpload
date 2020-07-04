@@ -25,7 +25,7 @@
                     <div class="collapse navbar-collapse navbar-ex1-collapse">
                         <ul class="nav navbar-nav" style="margin-left:25%">
                             <li class="active"><a action="Home/Index">Home</a></li>
-                            <li><a href="../Home/Service">Service</a></li>
+                            <li><a href="./Service">Service</a></li>
                             <li><a href="about.html">About</a></li>
                             <li><a href="help.html">Help</a></li>
                             <li><a href="faq.html">FAQs</a></li>
@@ -34,20 +34,20 @@
                 </nav>
             </div>
             <div class="col-md-2 logoDiv">
-                <img src="~/images/logo.png" class="mainLogo">
+                <img src="~/images/logo.png" class="mainLogo rotate">
             </div>
         </div>
     </div>
     <div class="container" id="spinnerContainer">
         <div class="loader"></div>
     </div>
-    <div class="container"  style="position:relative">
+    <div class="container"  style="position: relative;  ">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted container-fluid">
+    <footer class="border-top footer text-muted container-fluid"  style="position: absolute;bottom:0  ">
         <div class="row footerClass">
             <div style="text-align:center;width:100%">
                 <span>Copyrights &copy; @DateTime.Now.Year</span>

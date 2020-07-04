@@ -32,16 +32,21 @@ function UploadFiles() {
     var success = function (data) {
         removeFileAttached();
         $("#spinnerContainer").hide();
+        $("#newfileID").val("");
+        $('#uploadFileBtn').prop('disabled', true);
         alert(data.message);
     };
     var error = function (error) {
         if (error.status == 401)
         {
-            //show message to use as unauthorized
+            $("#launchModal").trigger("click");
+        }
+        if (error.status == 500) {
+            alert("Please refresh and try again!!");
         }
         removeFileAttached();
         $("#spinnerContainer").hide();
-        alert("Some error in the server. Kindly contact admin.");
+        
     };
     $.ajax({
         url: '/Home/UploadFiles',
@@ -59,6 +64,8 @@ function UploadFiles() {
 function getFile() {
     var fileId = $('#getFileId').val();
     window.open(window.location.origin + "/Home/GetFile?fileId=" + fileId);
+    $('#getFileId').val("");
+    $('#viewFiles').prop('disabled', true);
 }
 
 function getFiles() {
@@ -157,6 +164,7 @@ function signUp() {
             if (response.status == true) {
                 $("#register-danger-alert").hide();
                 $("#register-success-alert").show();
+                $("#regUsername, #regPassword, #regEmail, #regContact").val("");
             }
             else {
                 $("#spinnerContainer").hide();
