@@ -36,6 +36,12 @@ namespace SampleWebApp.Controllers
         }
 
         [Authorize]
+        public ActionResult Service() 
+        {
+            return View("Service");
+        }
+
+        [Authorize]
         [HttpPost]
         public JsonResult UploadFiles([FromForm] IFormCollection formData)
         {

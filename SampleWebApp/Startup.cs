@@ -31,6 +31,7 @@ namespace SampleWebApp
                    options.Cookie.HttpOnly = true;
                    options.Cookie.Name = "WebAppUpload";
                    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                   options.LoginPath = "/Home/Index"; 
                });
             services.AddAuthorization();
             services.AddControllersWithViews();
