@@ -27,7 +27,16 @@
 
 
 
-
+            <div class="col-sm-8">
+                <button onclick="getFiles()" class="btn btn-primary" id="getFiles">Retrieve Files</button>
+                <table class="table table-bordered table-hover" id="listFiles">
+                    <tr>
+                        <th>File ID</th>
+                        <th>File name</th>
+                        <th>Created Date</th>
+                    </tr>
+                </table>
+            </div>
             <div class="col-sm-4 row1Right">
                 <div id="loginbox" class="mainbox">
                     <div class="panel panel-info">
@@ -40,18 +49,12 @@
                         <div style="padding-top:30px" class="panel-body">
                             <p>Username : <span id="user-name"></span></p>
                         </div>
-                        <button onclick="getFiles()" id="getFiles">Get Files</button>
+                        
                     </div>
                 </div>
             </div>
 
-            <table class="table table-bordered table-hover" id="listFiles">
-                <tr>
-                    <th>File ID</th>
-                    <th>File name</th>
-                    <th>Created Date</th>
-                </tr>
-            </table>
+            
 
         </div>
 
