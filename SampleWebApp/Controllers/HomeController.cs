@@ -35,7 +35,7 @@ namespace SampleWebApp.Controllers
             return View("Dashboard");
         }
 
-        [Authorize]
+        
         public ActionResult Service() 
         {
             return View("Service");
@@ -72,6 +72,7 @@ namespace SampleWebApp.Controllers
             return File(fileBytes, "application/octet-stream", file?.FileName);
         }
 
+        [Authorize]
         [HttpGet]
         public JsonResult GetFiles()
         {

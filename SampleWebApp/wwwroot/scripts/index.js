@@ -12,7 +12,7 @@ function ajaxRequest(url, successCallback, errorCallback, data, type, contentTyp
         async: true,
         dataType: "json",
         success: successCallback,
-        errror: errorCallback
+        error: errorCallback
     });
 }
 
@@ -78,7 +78,10 @@ function getFiles() {
         $('#listFiles').append(trHTML);
         $('#getFiles').css("cursor", "not-allowed").prop("disabled", "true");
     };
-    var error = function () {
+    var error = function (error) {
+        if (error.status == 401) {
+            $("#launchModal").trigger("click");
+        }
         $("#listFiles").hide();
     }
     ajaxRequest("/Home/GetFiles", success, error, null, 'GET');
